@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "509217958703",
+    "project_id": "stock-market-78808",
+    "storage_bucket": "stock-market-78808.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509217958703:android:8d934f77c85c43f9594fda",
+        "android_client_info": {
+          "package_name": "com.cengo.stonks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeH67OakkzRcnTnAawsG92BSbwtOVh8eU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
