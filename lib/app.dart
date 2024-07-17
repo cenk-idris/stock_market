@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_market/screens/auth_gate.dart';
 
 class StonksApp extends StatelessWidget {
   const StonksApp({super.key});
@@ -8,7 +9,7 @@ class StonksApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'StonksApp',
-      home: Placeholder(),
+      home: AuthGate(),
     );
   }
 }
