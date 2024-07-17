@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_market/screens/stocks_screen.dart';
+import 'package:stock_market/screens/wallet_screen.dart';
 
 import '../blocs/auth_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final User user;
+  const HomeScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +16,7 @@ class HomeScreen extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('hello {user.email}'),
+            title: Text('Hi! ${user.email}'),
             actions: [
               InkWell(
                 onTap: () {
@@ -32,8 +36,8 @@ class HomeScreen extends StatelessWidget {
           body: SafeArea(
             child: TabBarView(
               children: [
-                Placeholder(),
-                Placeholder(),
+                WalletScreen(),
+                StocksScreen(),
               ],
             ),
           ),
