@@ -1,10 +1,10 @@
-final List<String> stockSymbols = [
-  'AAPL', // Apple Inc.
+const List<String> stockSymbols = [
+  'AAPL', // Apple Inc. DONE
   'MSFT', // Microsoft Corporation
-  'AMZN', // Amazon.com Inc.
+  'NVDA', // Amazon.com Inc.
   'GOOGL', // Alphabet Inc. Class A
-  'FB', // Facebook, Inc.
-  'TSLA', // Tesla, Inc.
+  'AMZN', // Facebook, Inc.
+  'META', // Tesla, Inc.
   'BRK.B', // Berkshire Hathaway Inc. Class B
   'JPM', // JPMorgan Chase & Co.
   'JNJ', // Johnson & Johnson

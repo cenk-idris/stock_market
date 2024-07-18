@@ -10,7 +10,7 @@ class StockService {
 
   StockService(this.apiKey);
 
-  Future<void> fetchLatestStockPrice(String symbol) async {
+  Future<Stock> fetchStockQuote(String symbol) async {
     final Uri url = Uri.parse(
         'https://finnhub.io/api/v1/quote?symbol=$symbol&token=$apiKey');
 
@@ -25,9 +25,8 @@ class StockService {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(data);
-      print(DateTime.now().millisecondsSinceEpoch);
-      return null;
+
+      return Stock.fromQuoteJson(symbol, data);
     } else {
       throw Exception('Failed to load stock data');
     }
