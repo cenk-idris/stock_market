@@ -63,4 +63,24 @@ class MarketBloc extends Cubit<MarketState> {
       emit(MarketError(e.toString()));
     }
   }
+
+  void _subscribeToRealTimeUpdates(List<String> symbols) {
+    _stockService.getStockStream(symbols).listen((stock) {
+      int index = _market.indexWhere((s) => s.symbol == stock.symbol);
+      if (index != -1) {
+        final Stock updatedStock = _market[index]
+            .copyWith(price: stock.price, timestamp: stock.timestamp);
+        _market[index] = updatedStock;
+        emit(MarketLoaded(_market));
+      }
+    }, onError: (error) {
+      emit(MarketError(error.toString()));
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _stockService.dispose();
+    return super.close();
+  }
 }

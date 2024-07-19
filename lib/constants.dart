@@ -12,11 +12,11 @@ const List<String> stockSymbols = [
   'WMT', // Walmart Inc.
   'PG', // Procter & Gamble Co.
   'MA', // Mastercard Incorporated
-  'NVDA', // NVIDIA Corporation
-  'HD', // The Home Depot, Inc.
-  'DIS', // The Walt Disney Company
-  'PYPL', // PayPal Holdings, Inc.
-  'UNH', // UnitedHealth Group Incorporated
-  'VZ', // Verizon Communications Inc.
-  'KO', // The Coca-Cola Company
+  'NFLX', // TSMC
+  'PLTR', // The Home Depot, Inc.
+  'AMD', // The Walt Disney Company
+  'CVX', // PayPal Holdings, Inc.
+  'TSLA', // UnitedHealth Group Incorporated
+  'IBM', // Verizon Communications Inc.
+  'ORCL', // The Coca-Cola Company
 ];
