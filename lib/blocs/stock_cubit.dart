@@ -51,6 +51,7 @@ class MarketBloc extends Cubit<MarketState> {
       }
       if (tmpStocks.isNotEmpty) {
         _market = tmpStocks;
+        _subscribeToRealTimeUpdates(stockSymbols);
         emit(MarketLoaded(_market));
       } else {
         emit(MarketError('Market is empty'));
