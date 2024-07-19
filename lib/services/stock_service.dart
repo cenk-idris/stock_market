@@ -17,8 +17,8 @@ class StockService {
     _subscribeToSymbols(symbolList);
     return _channel!.stream.expand((data) {
       final decoded = json.decode(data);
-      print(decoded);
       if (decoded['type'] == 'trade') {
+        print(decoded['data']);
         return decoded['data']
             .map<Stock>((trade) => Stock.fromWebSocketJson(trade))
             .toList();
@@ -27,7 +27,7 @@ class StockService {
     });
   }
 
-  void _initializeWebSocket() async {
+  Future<void> _initializeWebSocket() async {
     if (_channel == null) {
       _channel = WebSocketChannel.connect(
           Uri.parse('wss://ws.finnhub.io?token=$apiKey'));
@@ -45,7 +45,8 @@ class StockService {
     }
   }
 
-  void _subscribeToSymbols(List<String> symbolList) {
+  void _subscribeToSymbols(List<String> symbolList) async {
+    await _initializeWebSocket();
     for (final symbol in symbolList) {
       final message = json.encode({'type': 'subscribe', 'symbol': symbol});
       _channel!.sink.add(message);

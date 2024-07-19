@@ -18,16 +18,20 @@ class Stock extends Equatable {
   factory Stock.fromJson(Map<String, dynamic> json) {
     return Stock(
       symbol: json['s'],
-      price: double.parse(json['p']),
+      price: json['p'],
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
   }
 
-  factory Stock.fromWebSocketJson(Map<String, dynamic> json) {
+  factory Stock.fromWebSocketJson(Map<String, dynamic> data) {
+    double updatedPrice = data['p'];
+    if (data['p'] is int) {
+      updatedPrice = double.parse(data['p'].toString());
+    }
     return Stock(
-      symbol: json['s'],
-      price: json['p'],
-      timestamp: json['t'],
+      symbol: data['s'],
+      price: data['p'],
+      timestamp: data['t'],
     );
   }
 
@@ -42,7 +46,7 @@ class Stock extends Equatable {
         fullName: fullName,
         symbol: symbol,
         assetName: symbol.replaceAll('.', '-'),
-        price: data['c'],
+        price: (data['c'] is int) ? (data['c'] as int).toDouble() : data['c'],
         timestamp: (data['t'] as int) * 1000,
       );
     } catch (e) {
@@ -51,7 +55,7 @@ class Stock extends Equatable {
         fullName: 'ERROR Inc.',
         symbol: 'ERR',
         assetName: symbol.replaceAll('.', '-'),
-        price: 00.0,
+        price: 0.0,
         timestamp: DateTime.now().millisecondsSinceEpoch,
       );
     }
