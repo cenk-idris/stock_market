@@ -12,18 +12,23 @@ class StockService {
 
   StockService(this.apiKey);
 
-  Stream<Stock> getStockStream(List<String> symbolList) {
-    _initializeWebSocket();
-    _subscribeToSymbols(symbolList);
-    return _channel!.stream.expand((data) {
-      final decoded = json.decode(data);
-      if (decoded['type'] == 'trade') {
-        print(decoded['data']);
-        return decoded['data']
-            .map<Stock>((trade) => Stock.fromWebSocketJson(trade))
-            .toList();
-      }
-      return [];
+  // Stream<Stock> getStockStream(List<String> symbolList) {
+  //   return _channel!.stream.expand((data) {
+  //     final decoded = json.decode(data);
+  //     if (decoded['type'] == 'trade') {
+  //       print(decoded['data']);
+  //       return decoded['data']
+  //           .map<Stock>((trade) => Stock.fromWebSocketJson(trade))
+  //           .toList();
+  //     }
+  //     return [];
+  //   });
+  // }
+
+  Stream<Map<String, dynamic>> getWebSocketStream() {
+    //_initializeWebSocket(); // Ensures the WebSocket is initialized
+    return _channel!.stream.map((data) {
+      return json.decode(data);
     });
   }
 
@@ -45,7 +50,7 @@ class StockService {
     }
   }
 
-  void _subscribeToSymbols(List<String> symbolList) async {
+  Future<void> subscribeToSymbols(List<String> symbolList) async {
     await _initializeWebSocket();
     for (final symbol in symbolList) {
       final message = json.encode({'type': 'subscribe', 'symbol': symbol});

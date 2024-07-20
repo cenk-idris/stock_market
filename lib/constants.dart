@@ -1,4 +1,7 @@
 const List<String> stockSymbols = [
+  'BINANCE:SOLUSDT',
+  'BINANCE:BTCUSDT',
+  'BINANCE:XTZUSDT',
   'AAPL', // Apple Inc. DONE
   'MSFT', // Microsoft Corporation
   'NVDA', // Amazon.com Inc.

@@ -28,9 +28,11 @@ class Stock extends Equatable {
   // }
 
   factory Stock.fromWebSocketJson(Map<String, dynamic> data) {
-    double updatedPrice = data['p'];
+    double updatedPrice;
     if (data['p'] is int) {
-      updatedPrice = double.parse(data['p'].toString());
+      updatedPrice = (data['p'] as int).toDouble();
+    } else {
+      updatedPrice = data['p'];
     }
     return Stock(
       symbol: data['s'],
@@ -44,12 +46,18 @@ class Stock extends Equatable {
     try {
       final StockService _stockService =
           StockService('cqc77phr01qmbcu92mt0cqc77phr01qmbcu92mtg');
-      final String fullName = await _stockService.fetchCompanyName(symbol);
+
+      String fullName;
+      if (symbol.contains('BINANCE')) {
+        fullName = 'BINANCE';
+      } else {
+        fullName = await _stockService.fetchCompanyName(symbol);
+      }
       print(data['t']);
       return Stock(
         fullName: fullName,
         symbol: symbol,
-        assetName: symbol.replaceAll('.', '-'),
+        assetName: symbol.replaceAll('.', '-').replaceAll(':', '-'),
         price: (data['c'] is int) ? (data['c'] as int).toDouble() : data['c'],
         previousClose:
             (data['pc'] is int) ? (data['pc'] as int).toDouble() : data['pc'],
