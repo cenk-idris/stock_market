@@ -8,7 +8,7 @@ class Stock extends Equatable {
   final double price;
   final int timestamp;
 
-  Stock(
+  const Stock(
       {this.fullName = '',
       required this.symbol,
       this.assetName = '',
@@ -18,7 +18,7 @@ class Stock extends Equatable {
   factory Stock.fromJson(Map<String, dynamic> json) {
     return Stock(
       symbol: json['s'],
-      price: json['p'],
+      price: (json['p'] is int) ? (json['p'] as int).toDouble() : json['p'],
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
   }
@@ -30,7 +30,7 @@ class Stock extends Equatable {
     }
     return Stock(
       symbol: data['s'],
-      price: data['p'],
+      price: updatedPrice,
       timestamp: data['t'],
     );
   }
