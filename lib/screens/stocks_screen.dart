@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:stock_market/services/stock_service.dart';
 
 import '../blocs/stock_cubit.dart';
 
@@ -32,6 +30,10 @@ class StocksScreen extends StatelessWidget {
               itemCount: marketState.market.length,
               itemBuilder: (context, index) {
                 final stock = marketState.market[index];
+                final double percentChange =
+                    (stock.price - stock.previousClose) /
+                        stock.previousClose *
+                        100;
                 return ListTile(
                   onTap: () {
                     print('hello');
@@ -46,9 +48,20 @@ class StocksScreen extends StatelessWidget {
                   ),
                   title: Text(stock.symbol),
                   subtitle: Text(stock.fullName),
-                  trailing: Text(
-                    '${stock.price}\$',
-                    style: TextStyle(fontSize: 15.0),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${stock.price}\$',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            color: percentChange >= 0.0
+                                ? Colors.green
+                                : Colors.red),
+                      ),
+                      Text('${percentChange.toStringAsFixed(2)}%')
+                    ],
                   ),
                 );
               },
