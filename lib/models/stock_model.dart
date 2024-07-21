@@ -44,8 +44,7 @@ class Stock extends Equatable {
   static Future<Stock> fromQuoteJson(
       String symbol, Map<String, dynamic> data) async {
     try {
-      final StockService _stockService =
-          StockService('cqc77phr01qmbcu92mt0cqc77phr01qmbcu92mtg');
+      final StockService _stockService = StockService();
 
       String fullName;
       if (symbol.contains('BINANCE')) {
@@ -53,7 +52,7 @@ class Stock extends Equatable {
       } else {
         fullName = await _stockService.fetchCompanyName(symbol);
       }
-      print(data['t']);
+      print(symbol);
       return Stock(
         fullName: fullName,
         symbol: symbol,

@@ -15,15 +15,24 @@ abstract class MarketState extends Equatable {
 
 class MarketInitial extends MarketState {}
 
-class MarketLoading extends MarketState {}
+class MarketLoading extends MarketState {
+  final double progressValue;
+  final String stockBeingFetched;
+
+  MarketLoading({this.progressValue = 0.0, this.stockBeingFetched = ''});
+
+  @override
+  List<Object?> get props => [progressValue];
+}
 
 class MarketLoaded extends MarketState {
   final List<Stock> market;
+  final DateTime timestamp;
 
-  MarketLoaded(this.market);
+  MarketLoaded(this.market, this.timestamp);
 
   @override
-  List<Object?> get props => [market];
+  List<Object?> get props => [market, timestamp];
 }
 
 class MarketError extends MarketState {
@@ -35,11 +44,9 @@ class MarketError extends MarketState {
 }
 
 class MarketBloc extends Cubit<MarketState> {
-  final StockService _stockService =
-      StockService('cqc77phr01qmbcu92mt0cqc77phr01qmbcu92mtg');
+  final StockService _stockService = StockService();
+  StockService get stockService => _stockService;
   List<Stock> _market = [];
-  final StreamController<Map<String, dynamic>> _queueController =
-      StreamController<Map<String, dynamic>>();
 
   MarketBloc() : super(MarketInitial()) {
     populateStockList();
@@ -49,13 +56,19 @@ class MarketBloc extends Cubit<MarketState> {
     emit(MarketLoading());
     try {
       List<Stock> tmpStocks = [];
+      double progressVal = 0.0;
       for (final symbol in stockSymbols) {
+        int stockAmount = stockSymbols.length;
         final stock = await _stockService.fetchStockQuote(symbol);
         tmpStocks.add(stock);
+        progressVal += 1.0 / stockAmount;
+        //print(progressVal);
+        emit(MarketLoading(
+            progressValue: progressVal, stockBeingFetched: stock.fullName));
       }
       if (tmpStocks.isNotEmpty) {
         _market = tmpStocks;
-        emit(MarketLoaded(_market));
+        emit(MarketLoaded(_market, DateTime.now()));
         _subscribeToRealTimeUpdates(stockSymbols);
       } else {
         emit(MarketError('Market is empty'));
@@ -78,7 +91,7 @@ class MarketBloc extends Cubit<MarketState> {
         for (final trade in data['data']) {
           latestTrades[trade['s']] = trade;
         }
-        print(latestTrades.toString());
+        //print(latestTrades.toString());
         bool updated = false;
         for (final trade in latestTrades.values) {
           final Stock tradeStock = Stock.fromWebSocketJson(trade);
@@ -91,13 +104,13 @@ class MarketBloc extends Cubit<MarketState> {
           }
         }
         if (updated) {
-          print("Emitting new MarketLoaded state with updated market data.");
-          print(_market[0]);
-          List<Stock> updatedMarket = [];
-          for (final stock in _market) {
-            updatedMarket.add(stock);
-          }
-          emit(MarketLoaded(updatedMarket));
+          //print("Emitting new MarketLoaded state with updated market data.");
+
+          //print(_market[0]);
+          List<Stock> updatedList = _market.toList();
+          //print(updatedList == _market);
+
+          emit(MarketLoaded(updatedList, DateTime.now()));
         }
       }
     });

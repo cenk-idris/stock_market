@@ -1,29 +1,52 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/historical_data_model.dart';
 import '../models/stock_model.dart';
 
 class StockService {
-  final String apiKey;
+  final String finnhubApiKey = 'cqc77phr01qmbcu92mt0cqc77phr01qmbcu92mtg';
+  final String polygonApiKey = 'q9_5QfCcDzL_oErKS4p1YMHjebvqJfj1';
   WebSocketChannel? _channel;
 
-  StockService(this.apiKey);
+  StockService();
 
-  // Stream<Stock> getStockStream(List<String> symbolList) {
-  //   return _channel!.stream.expand((data) {
-  //     final decoded = json.decode(data);
-  //     if (decoded['type'] == 'trade') {
-  //       print(decoded['data']);
-  //       return decoded['data']
-  //           .map<Stock>((trade) => Stock.fromWebSocketJson(trade))
-  //           .toList();
-  //     }
-  //     return [];
-  //   });
-  // }
+  Future<List<HistoricalData>> fetchHistoricalData(String symbol,
+      String multiplier, String timespan, String from, String to) async {
+    try {
+      final Uri uri = new Uri(
+        scheme: 'https',
+        host: 'api.polygon.io',
+        path: 'v2/aggs/ticker/$symbol/range/$multiplier/$timespan/$from/$to',
+        queryParameters: {
+          'adjusted': 'true',
+          'sort': 'asc',
+          'apiKey': polygonApiKey,
+        },
+      );
+
+      final response = await http.get(uri);
+      print('do you even get here?');
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print(data);
+        return (data['results'] as List)
+            .map((point) => HistoricalData.fromJson(point))
+            .toList();
+      } else {
+        print('polygon api returned ${response.statusCode} instead 200');
+        throw Exception(
+            'polygon api returned ${response.statusCode} instead 200');
+      }
+    } catch (e) {
+      print('Heree??? ${e.toString()}');
+      throw Exception(e);
+    }
+  }
 
   Stream<Map<String, dynamic>> getWebSocketStream() {
     //_initializeWebSocket(); // Ensures the WebSocket is initialized
@@ -35,7 +58,7 @@ class StockService {
   Future<void> _initializeWebSocket() async {
     if (_channel == null) {
       _channel = WebSocketChannel.connect(
-          Uri.parse('wss://ws.finnhub.io?token=$apiKey'));
+          Uri.parse('wss://ws.finnhub.io?token=$finnhubApiKey'));
 
       try {
         await _channel?.ready;
@@ -64,7 +87,7 @@ class StockService {
 
   Future<Stock> fetchStockQuote(String symbol) async {
     final Uri url = Uri.parse(
-        'https://finnhub.io/api/v1/quote?symbol=$symbol&token=$apiKey');
+        'https://finnhub.io/api/v1/quote?symbol=$symbol&token=$finnhubApiKey');
 
     final Uri uri = new Uri(
       scheme: 'https',
@@ -72,7 +95,7 @@ class StockService {
       path: 'api/v1/quote',
       queryParameters: {
         'symbol': symbol,
-        'token': apiKey,
+        'token': finnhubApiKey,
       },
     );
     final response = await http.get(uri);
@@ -92,7 +115,7 @@ class StockService {
       path: 'api/v1/stock/profile2',
       queryParameters: {
         'symbol': symbol,
-        'token': apiKey,
+        'token': finnhubApiKey,
       },
     );
 

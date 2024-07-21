@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_market/blocs/stock_detail_cubit.dart';
+import 'package:stock_market/screens/stock_detail_screen.dart';
+import 'package:stock_market/services/stock_service.dart';
 
 import '../blocs/stock_cubit.dart';
 
@@ -16,19 +19,31 @@ class StocksScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: LinearProgressIndicator(
+                      value: marketState.progressValue,
+                    ),
+                  ),
                   SizedBox(
                     height: 50.0,
                   ),
-                  Text('Market data is being fetched...'),
-                  ElevatedButton(onPressed: () {}, child: Text('Fetch stonk')),
+                  if (marketState.stockBeingFetched.isNotEmpty)
+                    Column(
+                      children: [
+                        Text('Fetched data for...'),
+                        Text(marketState.stockBeingFetched),
+                      ],
+                    )
+                  else
+                    Text('Market data is being fetched'),
                 ],
               ),
             );
           } else if (marketState is MarketLoaded) {
             return ListView.separated(
               itemCount: marketState.market.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (marketContext, index) {
                 final stock = marketState.market[index];
                 final double percentChange =
                     (stock.price - stock.previousClose) /
@@ -36,7 +51,18 @@ class StocksScreen extends StatelessWidget {
                         100;
                 return ListTile(
                   onTap: () {
-                    print('hello');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                                  create: (context) => StockDetailBloc(
+                                      marketContext
+                                          .read<MarketBloc>()
+                                          .stockService)
+                                    ..fetchHistoricalData(stock.symbol, '1',
+                                        'day', '2023-01-01', '2024-07-20'),
+                                  child: StockDetailScreen(stock: stock),
+                                )));
                   },
                   leading: Container(
                     width: 40,
