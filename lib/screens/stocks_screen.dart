@@ -60,7 +60,7 @@ class StocksScreen extends StatelessWidget {
                                           .read<MarketBloc>()
                                           .stockService)
                                     ..fetchHistoricalData(stock.symbol, '1',
-                                        'day', '2023-01-01', '2024-07-20'),
+                                        'day', '2023-07-20', '2024-07-20'),
                                   child: StockDetailScreen(stock: stock),
                                 )));
                   },

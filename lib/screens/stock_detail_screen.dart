@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/stock_detail_cubit.dart';
 import '../models/stock_model.dart';
@@ -12,6 +13,16 @@ class StockDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create a DateFormat instance
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    // Get the current date
+    DateTime now = DateTime.now();
+    // Get the date one week before the current date for week slice
+    DateTime oneDayBefore = now.subtract(Duration(days: 2));
+    DateTime oneWeekBefore = now.subtract(Duration(days: 7));
+    DateTime oneMonthBefore = now.subtract(Duration(days: 30));
+    DateTime oneYearBefore = now.subtract(Duration(days: 365));
+
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -37,21 +48,21 @@ class StockDetailScreen extends StatelessWidget {
             } else if (detailState is StockDetailLoaded) {
               return Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 20.0,
                     ),
                     AspectRatio(
-                      aspectRatio: 1.3,
+                      aspectRatio: 1.7,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: LineChart(
                           LineChartData(
                             lineBarsData: [
                               LineChartBarData(
                                 dotData: FlDotData(show: false),
-                                isCurved: true,
+                                isCurved: false,
                                 spots: detailState.historicalData
                                     .map((data) => FlSpot(
                                         data.time.millisecondsSinceEpoch
@@ -80,13 +91,106 @@ class StockDetailScreen extends StatelessWidget {
                             ],
                             titlesData: FlTitlesData(
                               topTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: false,
-                                ),
+                                sideTitles: SideTitles(showTitles: false),
                               ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 40,
+                                    getTitlesWidget: (value, meta) {
+                                      return Text(value.toInt().toString());
+                                    }),
+                              ),
+                              rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 40,
+                                      getTitlesWidget: (value, meta) {
+                                        return Text(value.toInt().toString());
+                                      })),
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 60,
+                                    getTitlesWidget: (value, meta) {
+                                      DateTime date =
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              value.toInt());
+                                      return SideTitleWidget(
+                                          angle: 0.5,
+                                          axisSide: meta.axisSide,
+                                          child: Text(
+                                              '${date.year.toString()}-${date.month.toString()}'));
+                                    }),
+                              ),
+                            ),
+                            gridData: FlGridData(drawHorizontalLine: false),
+                            borderData: FlBorderData(
+                              show: false,
                             ),
                           ),
                         ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<StockDetailBloc>()
+                                  .fetchHistoricalData(
+                                    stock.symbol,
+                                    '1',
+                                    'minute',
+                                    formatter.format(oneDayBefore),
+                                    formatter.format(now),
+                                  );
+                            },
+                            child: Text('1D'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<StockDetailBloc>()
+                                  .fetchHistoricalData(
+                                      stock.symbol,
+                                      '1',
+                                      'hour',
+                                      formatter.format(oneWeekBefore),
+                                      formatter.format(now));
+                            },
+                            child: Text('1W'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<StockDetailBloc>()
+                                  .fetchHistoricalData(
+                                      stock.symbol,
+                                      '1',
+                                      'day',
+                                      formatter.format(oneMonthBefore),
+                                      formatter.format(now));
+                            },
+                            child: Text('1M'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<StockDetailBloc>()
+                                  .fetchHistoricalData(
+                                      stock.symbol,
+                                      '1',
+                                      'day',
+                                      formatter.format(oneYearBefore),
+                                      formatter.format(now));
+                            },
+                            child: Text('1Y'),
+                          ),
+                        ],
                       ),
                     ),
                   ],

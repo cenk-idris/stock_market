@@ -10,6 +10,7 @@ class HistoricalData extends Equatable {
   List<Object?> get props => [time, price];
 
   factory HistoricalData.fromJson(Map<String, dynamic> data) {
+    print(DateTime.fromMillisecondsSinceEpoch(data['t']));
     return HistoricalData(
       time: DateTime.fromMillisecondsSinceEpoch(data['t']),
       price: (data['c'] as num).toDouble(),

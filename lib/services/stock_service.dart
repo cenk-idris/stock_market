@@ -33,7 +33,7 @@ class StockService {
       print('do you even get here?');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print(data);
+        //print(data);
         return (data['results'] as List)
             .map((point) => HistoricalData.fromJson(point))
             .toList();
