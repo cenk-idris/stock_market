@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -197,6 +198,18 @@ class StockDetailScreen extends StatelessWidget {
                     SizedBox(
                       width: 150,
                       child: TextField(
+                        inputFormatters: [
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            final commaToDot =
+                                newValue.text.replaceAll(',', '.');
+
+                            print(oldValue.text);
+                            print(newValue.text);
+                            return newValue.copyWith(text: commaToDot);
+                          }),
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^(\d+)?\.?\d{0,2}')),
+                        ],
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();
                         },
@@ -219,8 +232,8 @@ class StockDetailScreen extends StatelessWidget {
                               foregroundColor: Colors.white),
                           onPressed: () {
                             final quantity =
-                                int.tryParse(_quantityController.text);
-                            if (quantity != null) {}
+                                double.tryParse(_quantityController.text);
+                            print(quantity);
                           },
                           child: Text('Buy Stonks'),
                         ),

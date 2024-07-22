@@ -40,7 +40,7 @@ class WalletScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'My stocks',
+                    'My Stonks 🤑',
                     style: TextStyle(fontSize: 32),
                   ),
                 ),
