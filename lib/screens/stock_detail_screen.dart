@@ -73,23 +73,10 @@ class StockDetailScreen extends StatelessWidget {
                                             .toDouble(),
                                         data.price))
                                     .toList(),
-                                color: Colors.white,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.red,
-                                    Colors.purpleAccent,
-                                    Colors.blueAccent,
-                                  ],
-                                ),
+                                color: Colors.green,
                                 belowBarData: BarAreaData(
                                   show: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.red.withOpacity(0.1),
-                                      Colors.purpleAccent.withOpacity(0.1),
-                                      Colors.blueAccent.withOpacity(0.1),
-                                    ],
-                                  ),
+                                  color: Colors.green.withOpacity(0.3),
                                 ),
                               ),
                             ],
