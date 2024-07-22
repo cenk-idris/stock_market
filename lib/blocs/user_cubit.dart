@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,6 +51,11 @@ class UserBloc extends Cubit<UserState> {
     }
   }
 
+  double roundTheDecimal(double value, int decimals) {
+    num mod = pow(10.0, decimals);
+    return ((value * mod).round().toDouble() / mod);
+  }
+
   Future<void> sellStock(String symbol, double quantity, double price) async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
@@ -67,9 +74,10 @@ class UserBloc extends Cubit<UserState> {
         final assetToBeSoldIndex =
             updatedAssets.indexWhere((asset) => asset.symbol == symbol);
         if (assetToBeSoldIndex != -1) {
+          double remainingShares = assetToBeSold.shares - quantity;
           updatedAssets[assetToBeSoldIndex] = Asset(
               symbol: assetToBeSold.symbol,
-              shares: assetToBeSold.shares - quantity);
+              shares: roundTheDecimal(remainingShares, 2));
           if (updatedAssets[assetToBeSoldIndex].shares == 0) {
             updatedAssets.removeAt(assetToBeSoldIndex);
           }
