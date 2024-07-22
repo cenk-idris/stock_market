@@ -12,7 +12,7 @@ class UserState extends Equatable {
   UserState({required this.balance, required this.assetList});
 
   @override
-  List<Object?> get props => [assetList];
+  List<Object?> get props => [balance, assetList];
 }
 
 class UserBloc extends Cubit<UserState> {
@@ -32,6 +32,7 @@ class UserBloc extends Cubit<UserState> {
           .snapshots()
           .listen((snapshot) {
         if (snapshot.exists) {
+          print('somethign changed');
           final data = snapshot.data()!;
           final balance = data['balance'];
           if (data['stocks'] != null) {
