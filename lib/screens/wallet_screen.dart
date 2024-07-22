@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:stock_market/screens/stock_detail_screen.dart';
 
 import '../blocs/auth_cubit.dart';
@@ -17,6 +18,10 @@ class WalletScreen extends StatelessWidget {
         builder: (context, userState) {
           final authState = BlocProvider.of<AuthBloc>(context).state;
           if (authState is Authenticated) {
+            final formattedBalance = NumberFormat.currency(
+              locale: 'en_US',
+              symbol: '\$',
+            ).format(userState.balance);
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -28,7 +33,7 @@ class WalletScreen extends StatelessWidget {
                     children: [
                       Text('Your current USD balance:'),
                       Text(
-                        '\$${userState.balance.toStringAsFixed(2)}',
+                        formattedBalance,
                         style: TextStyle(
                           fontSize: 36.0,
                           fontWeight: FontWeight.bold,
