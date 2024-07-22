@@ -13,10 +13,10 @@ class AuthGate extends StatelessWidget {
     return BlocProvider(
       create: (context) => AuthBloc(),
       child: BlocBuilder<AuthBloc, AuthenticationState>(
-        builder: (context, state) {
-          if (state is Authenticated) {
-            return HomeScreen(user: state.user);
-          } else if (state is Unauthenticated) {
+        builder: (context, authState) {
+          if (authState is Authenticated) {
+            return HomeScreen(user: authState.user);
+          } else if (authState is Unauthenticated) {
             return SignInScreen(
               providers: [EmailAuthProvider()],
               actions: [

@@ -4,7 +4,7 @@ import 'package:stock_market/blocs/stock_detail_cubit.dart';
 import 'package:stock_market/screens/stock_detail_screen.dart';
 import 'package:stock_market/services/stock_service.dart';
 
-import '../blocs/stock_cubit.dart';
+import '../blocs/market_cubit.dart';
 
 class StocksScreen extends StatelessWidget {
   const StocksScreen({super.key});

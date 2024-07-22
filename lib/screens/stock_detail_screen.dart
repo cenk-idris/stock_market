@@ -18,7 +18,7 @@ class StockDetailScreen extends StatelessWidget {
     // Get the current date
     DateTime now = DateTime.now();
     // Get the date one week before the current date for week slice
-    DateTime oneDayBefore = now.subtract(Duration(days: 2));
+    DateTime oneDayBefore = now.subtract(Duration(days: 3));
     DateTime oneWeekBefore = now.subtract(Duration(days: 7));
     DateTime oneMonthBefore = now.subtract(Duration(days: 30));
     DateTime oneYearBefore = now.subtract(Duration(days: 365));
