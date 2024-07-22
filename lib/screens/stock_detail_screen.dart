@@ -8,6 +8,7 @@ import '../models/stock_model.dart';
 
 class StockDetailScreen extends StatelessWidget {
   final Stock stock;
+  final TextEditingController _quantityController = TextEditingController();
 
   StockDetailScreen({super.key, required this.stock});
 
@@ -48,7 +49,7 @@ class StockDetailScreen extends StatelessWidget {
             } else if (detailState is StockDetailLoaded) {
               return Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
                       height: 20.0,
@@ -193,6 +194,51 @@ class StockDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      width: 150,
+                      child: TextField(
+                        onTapOutside: (event) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        controller: _quantityController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: '# of shares',
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: Size(150, 40),
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white),
+                          onPressed: () {
+                            final quantity =
+                                int.tryParse(_quantityController.text);
+                            if (quantity != null) {}
+                          },
+                          child: Text('Buy Stonks'),
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: Size(150, 40),
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white),
+                          onPressed: () {
+                            final quantity =
+                                int.tryParse(_quantityController.text);
+                            if (quantity != null) {}
+                          },
+                          child: Text('Sell Stonks'),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               );

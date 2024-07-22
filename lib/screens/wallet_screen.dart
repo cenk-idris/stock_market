@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_market/screens/stock_detail_screen.dart';
 
 import '../blocs/auth_cubit.dart';
 import '../blocs/market_cubit.dart';
+import '../blocs/stock_detail_cubit.dart';
 import '../blocs/user_cubit.dart';
 
 class WalletScreen extends StatelessWidget {
@@ -35,17 +37,26 @@ class WalletScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(
+                    'My stocks',
+                    style: TextStyle(fontSize: 32),
+                  ),
+                ),
                 Expanded(
                   child: BlocBuilder<MarketBloc, MarketState>(
-                    builder: (context, marketState) {
+                    builder: (marketContext, marketState) {
                       if (marketState is MarketLoading) {
                         return Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CircularProgressIndicator(),
                               SizedBox(
                                 height: 20.0,
-                              )
+                              ),
+                              Text('Please wait while fetching market data...')
                             ],
                           ),
                         );
@@ -59,7 +70,26 @@ class WalletScreen extends StatelessWidget {
                                 return stock.symbol == userAsset.symbol;
                               });
                               return ListTile(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                                create: (context) =>
+                                                    StockDetailBloc(
+                                                        marketContext
+                                                            .read<MarketBloc>()
+                                                            .stockService)
+                                                      ..fetchHistoricalData(
+                                                          userAsset.symbol,
+                                                          '1',
+                                                          'day',
+                                                          '2023-07-20',
+                                                          '2024-07-20'),
+                                                child: StockDetailScreen(
+                                                    stock: stockDetails),
+                                              )));
+                                },
                                 leading: Container(
                                   width: 40,
                                   child: Image.asset(
@@ -75,7 +105,9 @@ class WalletScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                        '${(userAsset.shares * stockDetails.price).toStringAsFixed(2)}')
+                                      '${(userAsset.shares * stockDetails.price).toStringAsFixed(2)}',
+                                      style: TextStyle(fontSize: 15),
+                                    )
                                   ],
                                 ),
                               );
