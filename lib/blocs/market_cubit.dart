@@ -31,6 +31,10 @@ class MarketLoaded extends MarketState {
 
   MarketLoaded(this.market, this.timestamp);
 
+  Stock getLatestStockPrice(String symbol) {
+    return market.firstWhere((stock) => stock.symbol == symbol);
+  }
+
   @override
   List<Object?> get props => [market, timestamp];
 }
