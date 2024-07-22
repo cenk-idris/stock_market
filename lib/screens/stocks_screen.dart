@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:stock_market/blocs/stock_detail_cubit.dart';
 import 'package:stock_market/screens/stock_detail_screen.dart';
 
@@ -14,6 +15,10 @@ class StocksScreen extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<MarketBloc, MarketState>(
         builder: (context, marketState) {
+          final currencyFormatter = NumberFormat.currency(
+            locale: 'en_US',
+            symbol: '\$',
+          );
           if (marketState is MarketLoading) {
             return Center(
               child: Column(
@@ -91,7 +96,7 @@ class StocksScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${stock.price}\$',
+                        currencyFormatter.format(stock.price),
                         style: TextStyle(
                             fontSize: 15.0,
                             color: percentChange >= 0.0

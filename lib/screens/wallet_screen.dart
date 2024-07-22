@@ -18,10 +18,10 @@ class WalletScreen extends StatelessWidget {
         builder: (context, userState) {
           final authState = BlocProvider.of<AuthBloc>(context).state;
           if (authState is Authenticated) {
-            final formattedBalance = NumberFormat.currency(
+            final currencyFormatter = NumberFormat.currency(
               locale: 'en_US',
               symbol: '\$',
-            ).format(userState.balance);
+            );
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -33,7 +33,7 @@ class WalletScreen extends StatelessWidget {
                     children: [
                       Text('Your current USD balance:'),
                       Text(
-                        formattedBalance,
+                        currencyFormatter.format(userState.balance),
                         style: TextStyle(
                           fontSize: 36.0,
                           fontWeight: FontWeight.bold,
@@ -141,7 +141,9 @@ class WalletScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      '${(userAsset.shares * stockDetails.price).toStringAsFixed(2)}',
+                                      currencyFormatter.format(
+                                          userAsset.shares *
+                                              stockDetails.price),
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
