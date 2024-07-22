@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_market/blocs/stock_detail_cubit.dart';
 import 'package:stock_market/screens/stock_detail_screen.dart';
-import 'package:stock_market/services/stock_service.dart';
 
 import '../blocs/market_cubit.dart';
+import '../blocs/user_cubit.dart';
 
 class StocksScreen extends StatelessWidget {
   const StocksScreen({super.key});
@@ -51,16 +51,28 @@ class StocksScreen extends StatelessWidget {
                         100;
                 return ListTile(
                   onTap: () {
+                    print(BlocProvider.of<UserBloc>(context).state.balance);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                                  create: (context) => StockDetailBloc(
-                                      marketContext
-                                          .read<MarketBloc>()
-                                          .stockService)
-                                    ..fetchHistoricalData(stock.symbol, '1',
-                                        'day', '2023-07-20', '2024-07-20'),
+                            builder: (context2) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) => StockDetailBloc(
+                                          marketContext
+                                              .read<MarketBloc>()
+                                              .stockService)
+                                        ..fetchHistoricalData(stock.symbol, '1',
+                                            'day', '2023-07-20', '2024-07-20'),
+                                    ),
+                                    BlocProvider.value(
+                                      value: BlocProvider.of<UserBloc>(context),
+                                    ),
+                                    BlocProvider.value(
+                                      value:
+                                          BlocProvider.of<MarketBloc>(context),
+                                    ),
+                                  ],
                                   child: StockDetailScreen(stock: stock),
                                 )));
                   },

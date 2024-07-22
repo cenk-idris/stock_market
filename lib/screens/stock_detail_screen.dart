@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../blocs/market_cubit.dart';
 import '../blocs/stock_detail_cubit.dart';
+import '../blocs/user_cubit.dart';
 import '../models/stock_model.dart';
 
 class StockDetailScreen extends StatelessWidget {
@@ -222,35 +224,56 @@ class StockDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(150, 40),
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white),
-                          onPressed: () {
-                            final quantity =
-                                double.tryParse(_quantityController.text);
-                            print(quantity);
-                          },
-                          child: Text('Buy Stonks'),
-                        ),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(150, 40),
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white),
-                          onPressed: () {
-                            final quantity =
-                                int.tryParse(_quantityController.text);
-                            if (quantity != null) {}
-                          },
-                          child: Text('Sell Stonks'),
-                        ),
-                      ],
+                    BlocBuilder<MarketBloc, MarketState>(
+                      builder: (context, marketState) {
+                        if (marketState is MarketLoaded) {
+                          final targetedStock =
+                              marketState.getLatestStockPrice(stock.symbol);
+                          return Column(
+                            children: [
+                              Text(
+                                  'Current stock value: \$${targetedStock.price}'),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(150, 40),
+                                        backgroundColor: Colors.green,
+                                        foregroundColor: Colors.white),
+                                    onPressed: () {
+                                      final quantity = double.tryParse(
+                                          _quantityController.text);
+                                      if (quantity != null) {
+                                        BlocProvider.of<UserBloc>(context)
+                                            .buyStock(stock.symbol, quantity,
+                                                targetedStock.price);
+                                      }
+                                    },
+                                    child: Text('Buy Stonks'),
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(150, 40),
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white),
+                                    onPressed: () {
+                                      final quantity = int.tryParse(
+                                          _quantityController.text);
+                                      if (quantity != null) {}
+                                    },
+                                    child: Text('Sell Stonks'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
                     )
                   ],
                 ),

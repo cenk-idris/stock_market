@@ -74,18 +74,32 @@ class WalletScreen extends StatelessWidget {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                                create: (context) =>
-                                                    StockDetailBloc(
-                                                        marketContext
-                                                            .read<MarketBloc>()
-                                                            .stockService)
-                                                      ..fetchHistoricalData(
-                                                          userAsset.symbol,
-                                                          '1',
-                                                          'day',
-                                                          '2023-07-20',
-                                                          '2024-07-20'),
+                                          builder: (context2) =>
+                                              MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider(
+                                                    create: (context) =>
+                                                        StockDetailBloc(
+                                                            marketContext
+                                                                .read<
+                                                                    MarketBloc>()
+                                                                .stockService)
+                                                          ..fetchHistoricalData(
+                                                              userAsset.symbol,
+                                                              '1',
+                                                              'day',
+                                                              '2023-07-20',
+                                                              '2024-07-20'),
+                                                  ),
+                                                  BlocProvider.value(
+                                                    value: BlocProvider.of<
+                                                        UserBloc>(context),
+                                                  ),
+                                                  BlocProvider.value(
+                                                    value: BlocProvider.of<
+                                                        MarketBloc>(context),
+                                                  )
+                                                ],
                                                 child: StockDetailScreen(
                                                     stock: stockDetails),
                                               )));
