@@ -163,7 +163,7 @@ class StockDetailScreen extends StatelessWidget {
                                   .fetchHistoricalData(
                                       stock.symbol,
                                       '1',
-                                      'day',
+                                      'hour',
                                       formatter.format(oneMonthBefore),
                                       formatter.format(now));
                             },
