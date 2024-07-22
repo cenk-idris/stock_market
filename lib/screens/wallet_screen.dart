@@ -38,10 +38,27 @@ class WalletScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Text(
-                    'My Stonks 🤑',
-                    style: TextStyle(fontSize: 32),
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'My Stonks 🤑',
+                        style: TextStyle(fontSize: 32),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Asset worth',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text('shares')
+                        ],
+                      )
+                    ],
                   ),
                 ),
                 Expanded(
@@ -120,8 +137,11 @@ class WalletScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       '${(userAsset.shares * stockDetails.price).toStringAsFixed(2)}',
-                                      style: TextStyle(fontSize: 15),
-                                    )
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(userAsset.shares.toString())
                                   ],
                                 ),
                               );

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -233,9 +234,39 @@ class StockDetailScreen extends StatelessWidget {
                                       final quantity = double.tryParse(
                                           _quantityController.text);
                                       if (quantity != null) {
-                                        BlocProvider.of<UserBloc>(context)
-                                            .buyStock(stock.symbol, quantity,
-                                                targetedStock.price);
+                                        try {
+                                          BlocProvider.of<UserBloc>(context)
+                                              .buyStock(stock.symbol, quantity,
+                                                  targetedStock.price);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Successfully bought $quantity shares of ${stock.symbol}',
+                                              ),
+                                            ),
+                                          );
+                                        } on FirebaseException catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Failed to buy shares Firebase Exception: ${e.toString()}',
+                                              ),
+                                            ),
+                                          );
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'An unexpected error occurred: ${e.toString()}',
+                                              ),
+                                            ),
+                                          );
+                                        } finally {
+                                          _quantityController.clear();
+                                        }
                                       }
                                     },
                                     child: Text('Buy Stonks'),

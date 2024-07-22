@@ -52,33 +52,28 @@ class UserBloc extends Cubit<UserState> {
   Future<void> buyStock(String symbol, double quantity, double price) async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
-      try {
-        final totalCost = quantity * price;
-        final currentState = state;
-        if (currentState.balance >= totalCost) {
-          final updatedBalance = currentState.balance - totalCost;
-          final List<Asset> updatedAssets = List.from(currentState.assetList);
-          final existingAssetIndex =
-              updatedAssets.indexWhere((asset) => asset.symbol == symbol);
-          if (existingAssetIndex != -1) {
-            final existingAsset = updatedAssets[existingAssetIndex];
-            updatedAssets[existingAssetIndex] = Asset(
-                symbol: existingAsset.symbol,
-                shares: existingAsset.shares + quantity);
-          } else {
-            updatedAssets.add(Asset(symbol: symbol, shares: quantity));
-          }
-          await _firestore.collection('users').doc(user.uid).set({
-            'balance': updatedBalance,
-            'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
-          });
-          emit(UserState(balance: updatedBalance, assetList: updatedAssets));
+      final totalCost = quantity * price;
+      final currentState = state;
+      if (currentState.balance >= totalCost) {
+        final updatedBalance = currentState.balance - totalCost;
+        final List<Asset> updatedAssets = List.from(currentState.assetList);
+        final existingAssetIndex =
+            updatedAssets.indexWhere((asset) => asset.symbol == symbol);
+        if (existingAssetIndex != -1) {
+          final existingAsset = updatedAssets[existingAssetIndex];
+          updatedAssets[existingAssetIndex] = Asset(
+              symbol: existingAsset.symbol,
+              shares: existingAsset.shares + quantity);
         } else {
-          print('Get your poor ass outta here');
+          updatedAssets.add(Asset(symbol: symbol, shares: quantity));
         }
-      } catch (e) {
-        print('Err at buyStock: ${e.toString()}');
-        throw Exception(e.toString());
+        await _firestore.collection('users').doc(user.uid).set({
+          'balance': updatedBalance,
+          'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
+        });
+        emit(UserState(balance: updatedBalance, assetList: updatedAssets));
+      } else {
+        print('Get your poor ass outta here');
       }
     }
   }
