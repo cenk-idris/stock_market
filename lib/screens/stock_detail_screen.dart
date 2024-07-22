@@ -230,12 +230,13 @@ class StockDetailScreen extends StatelessWidget {
                                         minimumSize: Size(150, 40),
                                         backgroundColor: Colors.green,
                                         foregroundColor: Colors.white),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       final quantity = double.tryParse(
                                           _quantityController.text);
                                       if (quantity != null) {
                                         try {
-                                          BlocProvider.of<UserBloc>(context)
+                                          await BlocProvider.of<UserBloc>(
+                                                  context)
                                               .buyStock(stock.symbol, quantity,
                                                   targetedStock.price);
                                           ScaffoldMessenger.of(context)
@@ -277,10 +278,45 @@ class StockDetailScreen extends StatelessWidget {
                                         minimumSize: Size(150, 40),
                                         backgroundColor: Colors.red,
                                         foregroundColor: Colors.white),
-                                    onPressed: () {
-                                      final quantity = int.tryParse(
+                                    onPressed: () async {
+                                      final quantity = double.tryParse(
                                           _quantityController.text);
-                                      if (quantity != null) {}
+                                      if (quantity != null) {
+                                        try {
+                                          await BlocProvider.of<UserBloc>(
+                                                  context)
+                                              .sellStock(stock.symbol, quantity,
+                                                  targetedStock.price);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Successfully sold $quantity shares of ${stock.symbol}',
+                                              ),
+                                            ),
+                                          );
+                                        } on FirebaseException catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Failed to buy shares Firebase Exception: ${e.toString()}',
+                                              ),
+                                            ),
+                                          );
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                '${e.toString()}',
+                                              ),
+                                            ),
+                                          );
+                                        } finally {
+                                          _quantityController.clear();
+                                        }
+                                      }
                                     },
                                     child: Text('Sell Stonks'),
                                   ),

@@ -49,6 +49,42 @@ class UserBloc extends Cubit<UserState> {
     }
   }
 
+  Future<void> sellStock(String symbol, double quantity, double price) async {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      final worthOfSale = quantity * price;
+      final currentState = state;
+      final assetToBeSold =
+          currentState.assetList.firstWhere((asset) => asset.symbol == symbol);
+
+      if (assetToBeSold.shares < quantity) {
+        print('${assetToBeSold.shares} is less than $quantity');
+        throw Exception('Insufficient shares');
+      } else {
+        print('and I get here');
+        final updatedBalance = currentState.balance + worthOfSale;
+        final List<Asset> updatedAssets = List.from(currentState.assetList);
+        final assetToBeSoldIndex =
+            updatedAssets.indexWhere((asset) => asset.symbol == symbol);
+        if (assetToBeSoldIndex != -1) {
+          updatedAssets[assetToBeSoldIndex] = Asset(
+              symbol: assetToBeSold.symbol,
+              shares: assetToBeSold.shares - quantity);
+          if (updatedAssets[assetToBeSoldIndex].shares == 0) {
+            updatedAssets.removeAt(assetToBeSoldIndex);
+          }
+        } else {
+          throw Exception('Can\'t sell asset that does not exist');
+        }
+        await _firestore.collection('users').doc(user.uid).set({
+          'balance': updatedBalance,
+          'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
+        });
+        emit(UserState(balance: updatedBalance, assetList: updatedAssets));
+      }
+    }
+  }
+
   Future<void> buyStock(String symbol, double quantity, double price) async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
