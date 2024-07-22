@@ -85,7 +85,7 @@ class UserBloc extends Cubit<UserState> {
           throw Exception('Can\'t sell asset that does not exist');
         }
         await _firestore.collection('users').doc(user.uid).set({
-          'balance': updatedBalance,
+          'balance': roundTheDecimal(updatedBalance, 2),
           'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
         });
         emit(UserState(balance: updatedBalance, assetList: updatedAssets));
@@ -112,7 +112,7 @@ class UserBloc extends Cubit<UserState> {
           updatedAssets.add(Asset(symbol: symbol, shares: quantity));
         }
         await _firestore.collection('users').doc(user.uid).set({
-          'balance': updatedBalance,
+          'balance': roundTheDecimal(updatedBalance, 2),
           'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
         });
         emit(UserState(balance: updatedBalance, assetList: updatedAssets));
