@@ -69,7 +69,7 @@ Below are the instructions to set up and run the project on macOS.
 - Xcode (iOS)
 - Latest iOS SDK for running iOS Simulator on macOS
 - [Flutter Version Manager](https://fvm.app/documentation/getting-started)
-- Your own Firebase project with Firestore created
+- Your own Firebase project with Firestore/Auth initialized
 
 ### Running the App
 
