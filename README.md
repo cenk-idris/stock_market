@@ -75,47 +75,47 @@ Follow these steps to run the Stock Market app:
 
 1. Clone the repository:
 
-    \`\`\`bash
+    ```bash
     git clone git@github.com:yourusername/stock_market_app.git
-    \`\`\`
+    ```
 
 2. Navigate to the project directory:
 
-    \`\`\`bash
+    ```bash
     cd stock_market_app
-    \`\`\`
+    ```
 
 3. Add Firebase to the project. Follow the instructions [here](https://firebase.google.com/docs/flutter/setup?platform=ios) to set up Firebase for iOS.
 
 4. Use the correct Flutter version:
 
-    \`\`\`bash
+    ```bash
     fvm use
-    \`\`\`
+    ```
 
 5. Clean the project:
 
-    \`\`\`bash
+    ```bash
     fvm flutter clean
-    \`\`\`
+    ```
 
 6. Get the project dependencies:
 
-    \`\`\`bash
+    ```bash
     fvm flutter pub get
-    \`\`\`
+    ```
 
 7. Launch the iOS simulator:
 
-    \`\`\`bash
+    ```bash
     fvm flutter emulators --launch apple_ios_simulator
-    \`\`\`
+    ```
 
 8. Run the app in debug mode:
 
-    \`\`\`bash
+    ```bash
     fvm flutter run --debug
-    \`\`\`
+    ```
 
 9. You will be prompted to choose the target device/platform. Pick the Simulator's iOS instance you just launched.
 
