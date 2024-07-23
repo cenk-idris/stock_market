@@ -21,9 +21,9 @@ This project is a Flutter application that allows users to view, buy, and sell s
 |--------------------------------------------------------------|--------------------------------------------------------------|-------------------------------------------------|
 | ![Stock List](/assets/screenshots/initial-stock-loading.png) | ![Stock Detail](/assets/screenshots/stock-market-screen.png) | ![Wallet](/assets/screenshots/stock-detail.png) |
 
-| Wallet Loading                                       | Wallet Screen                                          | Buy/Sell Notification                               |
-|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------|
-| ![Stock List](/assets/screenshots/wallet-loaded.png) | ![Stock Detail](/assets/screenshots/wallet-screen.png) | ![Wallet](/assets/screenshots/buy-notification.png) |
+| Wallet Loading                                        | Wallet Screen                                          | Buy/Sell Notification                               |
+|-------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------|
+| ![Stock List](/assets/screenshots/wallet-loading.png) | ![Stock Detail](/assets/screenshots/wallet-screen.png) | ![Wallet](/assets/screenshots/buy-notification.png) |
 
 ## Technologies Used
 
