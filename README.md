@@ -13,10 +13,6 @@ This project is a Flutter application that allows users to view, buy, and sell s
 
 ## Screenshots
 
-| Sign In                                       | Sign Up                                           | Forgot Password                                  |
-|-----------------------------------------------|---------------------------------------------------|--------------------------------------------------|
-| ![Stock List](/assets/screenshots/signin.png) | ![Stock Detail](/assets/screenshots/register.png) | ![Wallet](/assets/screenshots/forgot-screen.png) |
-
 | Stock Market Loading                                         | Stock Market Loaded                                          | Stock Detail Screen                             |
 |--------------------------------------------------------------|--------------------------------------------------------------|-------------------------------------------------|
 | ![Stock List](/assets/screenshots/initial-stock-loading.png) | ![Stock Detail](/assets/screenshots/stock-market-screen.png) | ![Wallet](/assets/screenshots/stock-detail.png) |
@@ -24,6 +20,11 @@ This project is a Flutter application that allows users to view, buy, and sell s
 | Wallet Loading                                        | Wallet Screen                                          | Buy/Sell Notification                               |
 |-------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------|
 | ![Stock List](/assets/screenshots/wallet-loading.png) | ![Stock Detail](/assets/screenshots/wallet-screen.png) | ![Wallet](/assets/screenshots/buy-notification.png) |
+
+
+| Sign In                                       | Sign Up                                           | Forgot Password                                  |
+|-----------------------------------------------|---------------------------------------------------|--------------------------------------------------|
+| ![Stock List](/assets/screenshots/signin.png) | ![Stock Detail](/assets/screenshots/register.png) | ![Wallet](/assets/screenshots/forgot-screen.png) |
 
 ## Technologies Used
 
