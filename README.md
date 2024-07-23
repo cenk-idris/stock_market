@@ -150,7 +150,7 @@ Follow these steps to run the Stock Market app:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgements / Technologies
+## Acknowledgements
 
 - [Flutter](https://flutter.dev/)
 - [Firebase](https://firebase.google.com/) - Cloud Backend
