@@ -76,13 +76,13 @@ Follow these steps to run the Stock Market app:
 1. Clone the repository:
 
     ```bash
-    git clone git@github.com:yourusername/stock_market_app.git
+    git clone git@github.com:cenk-idris/stock_market.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd stock_market_app
+    cd stock_market
     ```
 
 3. Add Firebase to the project. Follow the instructions [here](https://firebase.google.com/docs/flutter/setup?platform=ios) to set up Firebase for iOS.
@@ -129,7 +129,7 @@ Follow these steps to run the Stock Market app:
 
 ### Viewing Stocks
 
-- After login, users can view a list of available stocks and their current prices.
+- After login, users can view a list of available stocks and their current prices in real-time.
 
 ### Stock Details
 
@@ -138,7 +138,7 @@ Follow these steps to run the Stock Market app:
 ### Buying & Selling Stocks
 
 - Users can buy and sell stocks directly from the stock detail screen.
-- After a successful transaction, users are returned to the stock detail screen with a confirmation message.
+- After a successful transaction, users receive a confirmation message or error reason.
 
 ### Viewing Wallet
 
@@ -149,9 +149,11 @@ Follow these steps to run the Stock Market app:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgements
+## Acknowledgements / Technologies
 
 - [Flutter](https://flutter.dev/)
-- [Firebase](https://firebase.google.com/)
-- [Bloc](https://bloclibrary.dev/#/)
-- [FlChart](https://pub.dev/packages/fl_chart)
+- [Firebase](https://firebase.google.com/) - Cloud Backend
+- [Bloc](https://bloclibrary.dev/#/) - State management
+- [FlChart](https://pub.dev/packages/fl_chart) - For stock charts
+- [Polygon.io](https://polygon.io) - Rest and Websocket API for historical data and real-time trades for Stock/Cryptocurrency
+- https://finnhub.io/docs/api/crypto-symbols - Rest and Websocket API for historical data and real-time trades for Stock/Cryptocurrency
