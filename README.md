@@ -159,3 +159,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [FlChart](https://pub.dev/packages/fl_chart) - For stock charts
 - [Polygon.io](https://polygon.io) - Rest and Websocket API for historical data and real-time trades for Stock/Cryptocurrency
 - [Finnhub.io](https://finnhub.io/) - Rest and Websocket API for historical data and real-time trades for Stock/Cryptocurrency
+- [Companies Logo](https://companieslogo.com) - Stock logos
