@@ -35,7 +35,7 @@ This project is a Flutter application that allows users to view, buy, and sell s
 
 ## Project Structure
 
-\`\`\`
+```
 lib
 ├── blocs
 │   ├── auth_cubit.dart
@@ -56,7 +56,7 @@ lib
 │   └── stock_service.dart
 ├── app.dart
 └── main.dart
-\`\`\`
+```
 
 ## Getting Started
 
