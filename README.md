@@ -7,11 +7,12 @@ This project is a Flutter application that allows users to view, buy, and sell s
 
 ## Features
 
-- Cloud (Firebase) Auth and Data Storage
+- Firebase Auth and Firestore (Cloud storage)
+- Firebase atomic operations to prevent data race in case of concurrent logins
 - View Stock Chart for Day, Week, Month, Year Slices
 - Buy and Sell Stocks
-- View Wallet Balance and Owned Stocks
-- Real-time Stock Data Updates
+- View Wallet Balance and assets worth
+- Real-time stock price updates
 
 ## Screenshots
 
@@ -64,14 +65,13 @@ lib
 
 ## Getting Started
 
-Below are the instructions to set up and run the project on macOS.
+Below are the instructions to set up and run the project on iOS.
 
 ### Prerequisites
 
-- Xcode (iOS)
+- Xcode (only available on macOS devices)
 - Latest iOS SDK for running iOS Simulator on macOS
 - [Flutter Version Manager](https://fvm.app/documentation/getting-started)
-- Your own Firebase project with Firestore/Auth initialized
 
 ### Running the App
 
@@ -149,6 +149,12 @@ Follow these steps to run the Stock Market app:
 - Users can view their current balance and list of owned stocks in the wallet screen.
 - The balance is displayed in a formatted currency style.
 
+## Potential Improvements and Challenges
+
+- **Bloc Architecture:** The current implementation of Blocs is tightly coupled and does not fully adhere to [best practices](https://bloclibrary.dev/architecture/#bloc-to-bloc-communication). Specifically, Bloc-to-Bloc communication should be managed through events to avoid tight coupling and enhance modularity.
+
+- **Project Structure:** The current structure of the project is monolithic, making it less scalable and harder to maintain. Multiple responsibilities are being handled within the same Blocs, which violates the single responsibility principle. To improve this, Blocs should be refactored to have a single responsibility, leading to a more modular and maintainable architecture.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
@@ -159,6 +165,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [Firebase](https://firebase.google.com/) - Cloud Backend
 - [Bloc](https://bloclibrary.dev/#/) - State management
 - [FlChart](https://pub.dev/packages/fl_chart) - For stock charts
-- [Polygon.io](https://polygon.io) - Rest and Websocket API for historical data and real-time trades for Stock/Cryptocurrency
-- [Finnhub.io](https://finnhub.io/) - Rest and Websocket API for historical data and real-time trades for Stock/Cryptocurrency
+- [Polygon.io](https://polygon.io) - Rest API for historical data
+- [Finnhub.io](https://finnhub.io/) - Rest and Websocket API for company details and real-time ticker for Stock/Cryptocurrency
 - [Companies Logo](https://companieslogo.com) - Stock logos
