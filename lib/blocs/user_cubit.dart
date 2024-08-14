@@ -170,7 +170,7 @@ class UserBloc extends Cubit<UserState> {
         });
         emit(UserState(balance: updatedBalance, assetList: updatedAssets));
       } else {
-        print('Get your poor ass outta here');
+        throw Exception('Insufficient funds');
       }
     }
   }
