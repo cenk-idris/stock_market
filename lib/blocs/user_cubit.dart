@@ -34,7 +34,7 @@ class UserBloc extends Cubit<UserState> {
           .snapshots()
           .listen((snapshot) {
         if (snapshot.exists) {
-          print('somethign changed');
+          //print('something changed');
           final data = snapshot.data()!;
           final balance = data['balance'];
           if (data['stocks'] != null) {

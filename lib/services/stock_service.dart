@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,8 +10,9 @@ import '../models/historical_data_model.dart';
 import '../models/stock_model.dart';
 
 class StockService {
-  final String finnhubApiKey = 'cqc77phr01qmbcu92mt0cqc77phr01qmbcu92mtg';
-  final String polygonApiKey = 'q9_5QfCcDzL_oErKS4p1YMHjebvqJfj1';
+  final String finnhubApiKey = dotenv.env['FINNHUB_API_KEY'] ?? '';
+  final String polygonApiKey = dotenv.env['POLYGON_API_KEY'] ?? '';
+  final String polygonApiUrl = dotenv.env['POLYGON_API_URL'] ?? '';
   WebSocketChannel? _channel;
 
   StockService();
@@ -20,7 +22,7 @@ class StockService {
     try {
       final Uri uri = new Uri(
         scheme: 'https',
-        host: 'api.polygon.io',
+        host: polygonApiUrl,
         path: 'v2/aggs/ticker/$symbol/range/$multiplier/$timespan/$from/$to',
         queryParameters: {
           'adjusted': 'true',
@@ -89,7 +91,7 @@ class StockService {
     final Uri url = Uri.parse(
         'https://finnhub.io/api/v1/quote?symbol=$symbol&token=$finnhubApiKey');
 
-    final Uri uri = new Uri(
+    final Uri uri = Uri(
       scheme: 'https',
       host: 'finnhub.io',
       path: 'api/v1/quote',
