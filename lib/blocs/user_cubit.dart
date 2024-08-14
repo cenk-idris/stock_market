@@ -60,36 +60,89 @@ class UserBloc extends Cubit<UserState> {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
       final worthOfSale = quantity * price;
-      final currentState = state;
-      final assetToBeSold =
-          currentState.assetList.firstWhere((asset) => asset.symbol == symbol);
 
-      if (assetToBeSold.shares < quantity) {
-        print('${assetToBeSold.shares} is less than $quantity');
-        throw Exception('Insufficient shares');
-      } else {
-        print('and I get here');
-        final updatedBalance = currentState.balance + worthOfSale;
-        final List<Asset> updatedAssets = List.from(currentState.assetList);
-        final assetToBeSoldIndex =
-            updatedAssets.indexWhere((asset) => asset.symbol == symbol);
-        if (assetToBeSoldIndex != -1) {
-          double remainingShares = assetToBeSold.shares - quantity;
-          updatedAssets[assetToBeSoldIndex] = Asset(
-              symbol: assetToBeSold.symbol,
-              shares: roundTheDecimal(remainingShares, 2));
-          if (updatedAssets[assetToBeSoldIndex].shares == 0) {
-            updatedAssets.removeAt(assetToBeSoldIndex);
-          }
-        } else {
-          throw Exception('Can\'t sell asset that does not exist');
+      final userDocRef = _firestore.collection('users').doc(user.uid);
+
+      await _firestore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userDocRef);
+
+        if (!snapshot.exists) {
+          throw Exception("User document does not exist");
         }
-        await _firestore.collection('users').doc(user.uid).set({
-          'balance': roundTheDecimal(updatedBalance, 2),
-          'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
-        });
-        emit(UserState(balance: updatedBalance, assetList: updatedAssets));
-      }
+
+        final data = snapshot.data();
+
+        if (data == null || data.isEmpty) {
+          throw Exception("User document exists but contains no data");
+        }
+
+        final currentBalance = data['balance'] as double;
+        final stocks = List<Map<String, dynamic>>.from(data['stocks']);
+
+        final stockIndex =
+            stocks.indexWhere((asset) => asset['symbol'] == symbol);
+        if (stockIndex == -1) {
+          throw Exception('Asset not found');
+        }
+
+        final asset = stocks[stockIndex];
+        final remainingShares = roundTheDecimal(asset['shares'] - quantity, 2);
+
+        if (remainingShares < 0) {
+          throw Exception('Tried to sell more shares than you own');
+        } else {
+          if (remainingShares == 0) {
+            stocks.removeAt(stockIndex);
+          } else {
+            stocks[stockIndex] = {
+              'symbol': symbol,
+              'shares': remainingShares,
+            };
+          }
+          final updatedBalance =
+              roundTheDecimal(currentBalance + worthOfSale, 2);
+
+          transaction.update(userDocRef, {
+            'balance': updatedBalance,
+            'stocks': stocks,
+          });
+
+          emit(UserState(
+              balance: updatedBalance,
+              assetList: stocks.map((asset) => Asset.fromMap(asset)).toList()));
+        }
+      });
+
+      // final currentState = state;
+      // final assetToBeSold =
+      //     currentState.assetList.firstWhere((asset) => asset.symbol == symbol);
+
+      // if (assetToBeSold.shares < quantity) {
+      //   print('${assetToBeSold.shares} is less than $quantity');
+      //   throw Exception('Insufficient shares');
+      // } else {
+      //   print('and I get here');
+      //   final updatedBalance = currentState.balance + worthOfSale;
+      //   final List<Asset> updatedAssets = List.from(currentState.assetList);
+      //   final assetToBeSoldIndex =
+      //       updatedAssets.indexWhere((asset) => asset.symbol == symbol);
+      //   if (assetToBeSoldIndex != -1) {
+      //     double remainingShares = assetToBeSold.shares - quantity;
+      //     updatedAssets[assetToBeSoldIndex] = Asset(
+      //         symbol: assetToBeSold.symbol,
+      //         shares: roundTheDecimal(remainingShares, 2));
+      //     if (updatedAssets[assetToBeSoldIndex].shares == 0) {
+      //       updatedAssets.removeAt(assetToBeSoldIndex);
+      //     }
+      //   } else {
+      //     throw Exception('Can\'t sell asset that does not exist');
+      //   }
+      //   await _firestore.collection('users').doc(user.uid).set({
+      //     'balance': roundTheDecimal(updatedBalance, 2),
+      //     'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
+      //   });
+      //   emit(UserState(balance: updatedBalance, assetList: updatedAssets));
+      // }
     }
   }
 
