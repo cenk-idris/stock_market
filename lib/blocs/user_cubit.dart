@@ -150,28 +150,67 @@ class UserBloc extends Cubit<UserState> {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
       final totalCost = quantity * price;
-      final currentState = state;
-      if (currentState.balance >= totalCost) {
-        final updatedBalance = currentState.balance - totalCost;
-        final List<Asset> updatedAssets = List.from(currentState.assetList);
-        final existingAssetIndex =
-            updatedAssets.indexWhere((asset) => asset.symbol == symbol);
-        if (existingAssetIndex != -1) {
-          final existingAsset = updatedAssets[existingAssetIndex];
-          updatedAssets[existingAssetIndex] = Asset(
-              symbol: existingAsset.symbol,
-              shares: existingAsset.shares + quantity);
-        } else {
-          updatedAssets.add(Asset(symbol: symbol, shares: quantity));
+      final userDocRef = _firestore.collection('users').doc(user.uid);
+
+      await _firestore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userDocRef);
+        if (!snapshot.exists) {
+          throw Exception("User document does not exist");
         }
-        await _firestore.collection('users').doc(user.uid).set({
-          'balance': roundTheDecimal(updatedBalance, 2),
-          'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
+
+        final data = snapshot.data();
+        if (data == null || data.isEmpty) {
+          throw Exception("User document exists but contains no data");
+        }
+
+        final currentBalance = data['balance'] as double;
+        final stocks = List<Map<String, dynamic>>.from(data['stocks']);
+
+        if (currentBalance < totalCost) {
+          throw Exception('Insufficient balance');
+        }
+
+        final stockIndex =
+            stocks.indexWhere((asset) => asset['symbol'] == symbol);
+        if (stockIndex != -1) {
+          stocks[stockIndex]['shares'] += quantity;
+        } else {
+          stocks.add({'symbol': symbol, 'shares': quantity});
+        }
+
+        final updatedBalance = roundTheDecimal(currentBalance - totalCost, 2);
+
+        transaction.update(userDocRef, {
+          'balance': updatedBalance,
+          'stocks': stocks,
         });
-        emit(UserState(balance: updatedBalance, assetList: updatedAssets));
-      } else {
-        throw Exception('Insufficient funds');
-      }
+
+        emit(UserState(
+            balance: updatedBalance,
+            assetList: stocks.map((asset) => Asset.fromMap(asset)).toList()));
+      });
+      // final currentState = state;
+      // if (currentState.balance >= totalCost) {
+      //   final updatedBalance = currentState.balance - totalCost;
+      //   final List<Asset> updatedAssets = List.from(currentState.assetList);
+      //   final existingAssetIndex =
+      //       updatedAssets.indexWhere((asset) => asset.symbol == symbol);
+      //   if (existingAssetIndex != -1) {
+      //     final existingAsset = updatedAssets[existingAssetIndex];
+      //     updatedAssets[existingAssetIndex] = Asset(
+      //         symbol: existingAsset.symbol,
+      //         shares: existingAsset.shares + quantity);
+      //   } else {
+      //     updatedAssets.add(Asset(symbol: symbol, shares: quantity));
+      //   }
+      //   await _firestore.collection('users').doc(user.uid).set({
+      //     'balance': roundTheDecimal(updatedBalance, 2),
+      //     'stocks': updatedAssets.map((asset) => asset.toMap()).toList(),
+      //   });
+      //   emit(UserState(balance: updatedBalance, assetList: updatedAssets));
+      // } else {
+      //   throw Exception('Insufficient funds');
+      // }
     }
   }
 }
