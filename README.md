@@ -1,7 +1,9 @@
 
 # Stock Market App
 
-This project is a Flutter application that allows users to view, buy, and sell stocks in real-time. The app integrates with Firebase for authentication and user data storage, and uses the Bloc for state management.
+This project is a Flutter application that allows users to view, buy, and sell stocks in real-time. The app integrates with Firebase for authentication and user data storage, and uses Bloc for state management.
+
+**Important Note:** Project uses real-time stock informations therefore tickers are 'visible' when New York Stock Exchange is [open](https://www.tradinghours.com/markets/nyse). For testing purposes you will see 3 cryptocurrency to see real-time updates even when NYSE is close.
 
 ## Features
 
